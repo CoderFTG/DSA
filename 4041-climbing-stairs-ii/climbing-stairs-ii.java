@@ -1,11 +1,14 @@
 class Solution {
     public int climbStairs(int n, int[] costs) {
-        costs = IntStream.concat(IntStream.of(0), Arrays.stream(costs)).toArray();  // step 0 is free, step i costs costs[i]
-        int[] dp = new int[n + 3];  // dp[i] = climb(i)
-        Arrays.fill(dp, Integer.MAX_VALUE / 2);  // the two steps past the top stay inf
-        dp[n] = costs[n];
-        for (int i = n - 1; i >= 0; i--)  // from the top step down
-            dp[i] = costs[i] + Math.min(dp[i + 1] + 1, Math.min(dp[i + 2] + 4, dp[i + 3] + 9));
-        return dp[0];
+        int INF = Integer.MAX_VALUE / 2;
+        int p3 = INF, p2 = INF, p1 = 0;
+        for (int i = 1; i <= n; i++) {
+            int best = Math.min(p1 + 1, Math.min(p2 + 4, p3 + 9));
+            int cur = best + costs[i - 1];
+            p3 = p2;
+            p2 = p1;
+            p1 = cur;
+        }
+        return p1;
     }
 }
